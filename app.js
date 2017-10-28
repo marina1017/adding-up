@@ -7,6 +7,8 @@ const readline = require('readline');
 const rs = fs.ReadStream('./popu-pref.csv');
 //readlineのオブジェクトのinputとして設定
 const rl = readline.createInterface({'input':rs,'output':{}});
+//key: 都道府県 value: 集計データのオブジェクト
+const map = new Map();
 //rlオブジェクトでlineイベントが発生したら無名関数を読んだほしいイベント関数
 rl.on('line',(lineString) => {
 //lineStringで与えられた文字列をカンマで分割
@@ -16,10 +18,27 @@ rl.on('line',(lineString) => {
 	const prefecture = columns[2];
 	const popu = parseInt(columns[7]);
 	if( year === 2010 || year === 2015 ){
-	 console.log(year);
-	 console.log(prefecture);
-	 console.log(popu);
+
+		//連想配列mapからデータを取得
+		let value = map.get(prefecture);
+		if (!value) {
+			value = {
+				popu10: 0,
+				popu15: 0,
+				change: null
+			};
+		}
+		if (year === 2010) {
+			value.popu10 += popu;
+		}
+		if (year === 2015) {
+			value.popu15 += popu;
+		}
+		map.set(prefecture, value);
 	}
 });
 //ストリームに情報を流し始める処理
 rl.resume();
+rl.on('close', () => {
+	console.log(map)
+});
