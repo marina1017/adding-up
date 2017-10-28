@@ -37,7 +37,7 @@ rl.on('line',(lineString) => {
 		map.set(prefecture, value);
 	}
 });
-//ストリームに情報を流し始める処理
+//ストリームに情報を流し始める処理をします
 rl.resume();
 rl.on('close', () => {
 	for (let pair of map ){
