@@ -40,5 +40,18 @@ rl.on('line',(lineString) => {
 //ストリームに情報を流し始める処理
 rl.resume();
 rl.on('close', () => {
-	console.log(map)
+	for (let pair of map ){
+		const value = pair[1];
+		value.change = value.popu15 / value.popu10;
+	}
+	//連想配列を普通の配列に変換
+	//sortに対して渡す関数を比例関数並び替えのルールを決めれる
+	//前者の引数を後者の引数より前にしたい場合 負の整数を返す
+	//前にしたい場合 正の整数を返す
+	//並びをそのままにしたい場合0を返せばいい
+	const rankingArray = Array.from(map).sort((pair1, pair2) => {
+		return pair2[1].change - pair1[1].change;
+	});
+	console.log(rankingArray)
 });
+
